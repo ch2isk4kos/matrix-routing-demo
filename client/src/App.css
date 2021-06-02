@@ -2,14 +2,22 @@
   margin: 0;
 }
 
+body {
+  display: flex;
+  justify-content: center;
+}
+
 .App {
   text-align: center;
-  height: 100vh;
+  /* height: 100vh; */
+  height: 90vh;
+  width: 100vw;
 }
 
 .map {
   /* height: 800px; */
-  height: 80vh;
+  height: 100%;
+  width: 100%;
 }
 
 .marker {
