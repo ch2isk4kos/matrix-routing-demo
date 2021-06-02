@@ -22,9 +22,12 @@ const App = () => {
       zoom: 15,
     });
     setMap(map);
+    // popup
+    const popupOffset = { bottom: [0, -60] };
+    const popup = new tt.Popup({ offset: popupOffset }).setHTML("You Are Here");
     // marker
     const addMarker = () => {
-      let element = document.createElement("div");
+      const element = document.createElement("div");
       element.className = "marker";
       const marker = new tt.Marker({
         draggable: true,
@@ -38,6 +41,7 @@ const App = () => {
         setLongitude(lngLat.lng);
         setLatitude(lngLat.lat);
       });
+      marker.setPopup(popup).togglePopup();
     };
     addMarker();
     return () => map.remove();
