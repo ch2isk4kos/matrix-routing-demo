@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as tt from "@tomtom-international/web-sdk-maps";
+import * as ttapi from "@tomtom-international/web-sdk-services";
 import "@tomtom-international/web-sdk-maps/dist/maps.css";
 import "./App.css";
 
