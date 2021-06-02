@@ -5,6 +5,7 @@ import "./App.css";
 
 const App = () => {
   const [map, setMap] = useState({});
+  const [destinations, setDestinations] = useState([]);
   const [longitude, setLongitude] = useState(-73.993324);
   const [latitude, setLatitude] = useState(40.750298);
   const mapElement = useRef();
@@ -21,6 +22,7 @@ const App = () => {
   const addDeliveryMarker = (lngLat, map) => {
     const element = document.createElement("div");
     element.className = "marker-delivery";
+    new tt.Marker({ element: element }).setLngLat(lngLat).addTo(map);
   };
 
   useEffect(() => {
@@ -63,23 +65,41 @@ const App = () => {
       marker.setPopup(popup).togglePopup();
     };
     addMarker();
+    // destinations
+    const sortDestinations = (locations) => {
+      const destinations = locations.map((destination) => {
+        return coordinates(destination);
+      });
+      const callParameters = {
+        key: process.env.REACT_APP_TT_KEY,
+        destinations: destinations,
+        origin: [coordinates(origin)],
+      };
+      return new Promise((resolve, reject) => {
+        ttapi.services.matrixRouting(callParameters).then((results) => {
+          const matrix = results.matrix[0];
+          const routes = matrix.map((data, index) => {
+            return {
+              location: locations[index],
+              drivingtime: data.response.routeSummary.travelTimeInSeconds,
+            };
+          });
+          routes.sort((a, b) => {
+            return a.drivingtime - b.drivingtime;
+          });
+          const sortedRoutes = routes.map((route) => {
+            return route.location;
+          });
+          resolve(sortedRoutes);
+        });
+      });
+    };
 
-    // const desitinationPoints = locations.map()
-
-    // const callParameters = {
-    //   key: process.env.REACT_APP_TT_KEY,
-    //   destinations: desitinationPoints,
-    //   origin: [coordinates(origin)],
-    // };
-
-    // return new Promise((resolve, reject) => {
-    //   ttapi.services.matrixRouting(callParameters);
-    // });
-
-    const destinations = new Array();
     map.on("click", (e) => {
-      destinations.push(e.lngLat);
-      addDeliveryMarker();
+      // destinations.push(e.lngLat);
+      setDestinations(...destinations, e.lngLat);
+      addDeliveryMarker(e.lngLat, map);
+      console.log("destinations:", destinations);
     });
 
     return () => map.remove();
