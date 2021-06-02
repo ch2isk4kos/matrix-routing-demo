@@ -9,7 +9,26 @@ const App = () => {
   const [latitude, setLatitude] = useState(40.750298);
   const mapElement = useRef();
 
+  const coordinates = (lngLat) => {
+    return {
+      point: {
+        longitude: lngLat.lng,
+        latitude: lngLat.lat,
+      },
+    };
+  };
+
+  const addDeliveryMarker = (lngLat, map) => {
+    const element = document.createElement("div");
+    element.className = "marker-delivery";
+  };
+
   useEffect(() => {
+    // coordinates
+    const origin = {
+      lng: longitude,
+      lat: latitude,
+    };
     // map
     let map = tt.map({
       key: process.env.REACT_APP_TT_KEY,
@@ -44,6 +63,25 @@ const App = () => {
       marker.setPopup(popup).togglePopup();
     };
     addMarker();
+
+    // const desitinationPoints = locations.map()
+
+    // const callParameters = {
+    //   key: process.env.REACT_APP_TT_KEY,
+    //   destinations: desitinationPoints,
+    //   origin: [coordinates(origin)],
+    // };
+
+    // return new Promise((resolve, reject) => {
+    //   ttapi.services.matrixRouting(callParameters);
+    // });
+
+    const destinations = new Array();
+    map.on("click", (e) => {
+      destinations.push(e.lngLat);
+      addDeliveryMarker();
+    });
+
     return () => map.remove();
   }, [longitude, latitude]);
 
