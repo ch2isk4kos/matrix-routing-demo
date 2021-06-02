@@ -20,6 +20,25 @@ const App = () => {
     };
   };
 
+  const drawRoute = (geoJson, map) => {
+    if (map.getLayer("route")) {
+      map.removeLayer("route");
+      map.removeSource("route");
+    }
+    map.addLayer({
+      id: "route",
+      type: "line",
+      source: {
+        type: "geojson",
+        data: geoJson,
+      },
+      paint: {
+        "line-color": "green",
+        "line-width": 6,
+      },
+    });
+  };
+
   const addDeliveryMarker = (lngLat, map) => {
     const element = document.createElement("div");
     element.className = "marker-delivery";
@@ -74,25 +93,43 @@ const App = () => {
       const callParameters = {
         key: process.env.REACT_APP_TT_KEY,
         destinations: location,
-        origin: [coordinates(origin)],
+        origins: [coordinates(origin)],
       };
       return new Promise((resolve, reject) => {
-        ttapi.services.matrixRouting(callParameters).then((results) => {
-          const matrix = results.matrix[0];
-          const routes = matrix.map((data, index) => {
-            return {
-              location: locations[index],
-              drivingtime: data.response.routeSummary.travelTimeInSeconds,
-            };
+        ttapi.services
+          .matrixRouting(callParameters)
+          .then((results) => {
+            const matrix = results.matrix[0];
+            const routes = matrix.map((data, index) => {
+              return {
+                location: locations[index],
+                drivingtime: data.response.routeSummary.travelTimeInSeconds,
+              };
+            });
+            routes.sort((a, b) => {
+              return a.drivingtime - b.drivingtime;
+            });
+            const sortedRoutes = routes.map((route) => {
+              return route.location;
+            });
+            resolve(sortedRoutes);
+          })
+          .catch((err) => console.log(err));
+      });
+    };
+
+    const reCalculateDestinationPath = () => {
+      sortDestinations(destinations).then((sorted) => {
+        sorted.unshift(origin);
+        ttapi.services
+          .calculateRoute({
+            key: process.env.REACT_APP_TT_KEY,
+            locations: sorted,
+          })
+          .then((data) => {
+            const geoJson = data.toGeoJson();
+            drawRoute(geoJson, map);
           });
-          routes.sort((a, b) => {
-            return a.drivingtime - b.drivingtime;
-          });
-          const sortedRoutes = routes.map((route) => {
-            return route.location;
-          });
-          resolve(sortedRoutes);
-        });
       });
     };
 
@@ -100,11 +137,12 @@ const App = () => {
       // setDestinations(...destinations, e.lngLat);
       destinations.push(e.lngLat);
       addDeliveryMarker(e.lngLat, map);
+      reCalculateDestinationPath();
       console.log("destinations:", destinations);
     });
 
     return () => map.remove();
-  }, [longitude, latitude]);
+  }, [longitude, latitude, destinations]);
 
   return (
     <>
