@@ -25,7 +25,11 @@ body {
   background-size: cover;
   width: 50px;
   height: 50px;
-  background-color: yellow;
-  border-radius: 11px;
-  border: solid 3px lightgray;
+}
+
+.marker-delivery {
+  background-image: url("https://image.flaticon.com/icons/png/512/465/465933.png");
+  background-size: cover;
+  width: 50px;
+  height: 50px;
 }
