@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-// import
+import React, { useState, useEffect, useRef } from "react";
+import * as tt from "@tomtom-international/web-sdk-maps";
 import "./App.css";
 
 const App = () => {
   const [map, setMap] = useState({});
+  const mapElement = useRef();
 
   useEffect(() => {
     let map = tt.map({
