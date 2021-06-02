@@ -9,6 +9,7 @@ const App = () => {
   const mapElement = useRef();
 
   useEffect(() => {
+    // map
     let map = tt.map({
       key: process.env.REACT_APP_TT_KEY,
       container: mapElement.current,
@@ -20,6 +21,14 @@ const App = () => {
       zoom: 15,
     });
     setMap(map);
+    // marker
+    const addMarker = () => {
+      const element = document.createElement("div").className("marker");
+      const marker = new tt.Marker({
+        draggable: true,
+        element: element,
+      });
+    };
     return () => map.remove();
   }, [longitude, latitude]);
 
