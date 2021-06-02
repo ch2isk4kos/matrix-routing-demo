@@ -16,8 +16,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1>Welcome Home</h1>
-      <div ref={mapElement}></div>
+      <div className="map" ref={mapElement}></div>
     </div>
   );
 };
