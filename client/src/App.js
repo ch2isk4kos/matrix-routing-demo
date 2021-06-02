@@ -68,12 +68,12 @@ const App = () => {
     addMarker();
     // destinations
     const sortDestinations = (locations) => {
-      const destinations = locations.map((destination) => {
+      const location = locations.map((destination) => {
         return coordinates(destination);
       });
       const callParameters = {
         key: process.env.REACT_APP_TT_KEY,
-        destinations: destinations,
+        destinations: location,
         origin: [coordinates(origin)],
       };
       return new Promise((resolve, reject) => {
@@ -97,8 +97,8 @@ const App = () => {
     };
 
     map.on("click", (e) => {
-      // destinations.push(e.lngLat);
-      setDestinations(...destinations, e.lngLat);
+      // setDestinations(...destinations, e.lngLat);
+      destinations.push(e.lngLat);
       addDeliveryMarker(e.lngLat, map);
       console.log("destinations:", destinations);
     });
