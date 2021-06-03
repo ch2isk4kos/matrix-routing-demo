@@ -20,7 +20,7 @@ const App = () => {
     };
   };
 
-  const drawRoute = (geoJson, map) => {
+  const drawDestinationPath = (geoJson, map) => {
     if (map.getLayer("route")) {
       map.removeLayer("route");
       map.removeSource("route");
@@ -33,7 +33,7 @@ const App = () => {
         data: geoJson,
       },
       paint: {
-        "line-color": "green",
+        "line-color": "blue",
         "line-width": 6,
       },
     });
@@ -59,8 +59,8 @@ const App = () => {
         trafficIncidents: true,
         trafficFlow: true,
       },
-      center: [longitude, latitude],
-      zoom: 15,
+      // center: [longitude, latitude],
+      // zoom: 15,
     });
     setMap(map);
     // popup
@@ -128,7 +128,7 @@ const App = () => {
           })
           .then((data) => {
             const geoJson = data.toGeoJson();
-            drawRoute(geoJson, map);
+            drawDestinationPath(geoJson, map);
           });
       });
     };
@@ -148,7 +148,7 @@ const App = () => {
     <>
       {map && (
         <div className="App">
-          <div className="search-bar">
+          {/* <div className="search-bar">
             <h1>Where Do You Want to Go?</h1>
             <input
               type="text"
@@ -165,7 +165,7 @@ const App = () => {
               onChange={(e) => setLatitude(e.target.value)}
             />
             <button>Go</button>
-          </div>
+          </div> */}
           <div className="map" ref={mapElement}></div>
         </div>
       )}
