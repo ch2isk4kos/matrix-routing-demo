@@ -7,8 +7,10 @@ import "./App.css";
 const App = () => {
   const [map, setMap] = useState({});
   const [destinations, setDestinations] = useState([]);
-  const [longitude, setLongitude] = useState(-73.993324);
-  const [latitude, setLatitude] = useState(40.750298);
+  // const [longitude, setLongitude] = useState(-73.993324);
+  const [longitude, setLongitude] = useState(-73.99198960101529);
+  // const [latitude, setLatitude] = useState(40.750298);
+  const [latitude, setLatitude] = useState(40.74985909983036);
   const mapElement = useRef();
 
   const coordinates = (lngLat) => {
@@ -59,8 +61,8 @@ const App = () => {
         trafficIncidents: true,
         trafficFlow: true,
       },
-      // center: [longitude, latitude],
-      // zoom: 15,
+      center: [longitude, latitude],
+      zoom: 17,
     });
     setMap(map);
     // popup
